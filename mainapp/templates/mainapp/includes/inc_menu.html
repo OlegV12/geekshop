@@ -1,0 +1,61 @@
+<a class="logo" href="{% url 'main' %}"></a>
+<ul class="menu">
+    <li>
+        <a class="{% if request.resolver_match.url_name == 'main' %}active{% endif %}" href="{% url 'main' %}">
+            домой
+        </a>
+    </li>
+    <li>
+        <a class="{% if request.resolver_match.namespace == 'products' %}active{% endif %}"
+           href="{% url 'products:index' %}">
+            продукты
+        </a>
+    </li>
+    <li>
+        <a class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}">
+            контакты
+        </a>
+    </li>
+    {% if user.is_authenticated %}
+    <li>
+        <div class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                {{ user.first_name|default:'Пользователь' }}
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="{% url 'auth:edit' %}">
+                        профиль
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'ordersapp:orders_list' %}">
+                        заказы
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+    {% endif %}
+    {% if user.is_superuser %}
+    <li>
+        <a href="{% url 'admin:users' %}">админка</a>
+    </li>
+    {% endif %}
+    <li>
+        {% if user.is_authenticated %}
+        <a href="{% url 'auth:logout' %}">выйти</a>
+        {% else %}
+        <a href="{% url 'auth:login' %}">войти</a>
+        {% endif %}
+    </li>
+</ul>
+<a class="search" href="#"></a>
+<a class="basket" href="{% url 'basket:view' %}">
+    <span>
+        {% if basket %} 
+            {{ basket.0.total_cost|floatformat:0 }} руб ({{ basket.0.total_quantity }} шт)
+        {% endif %}
+    </span>
+</a>
