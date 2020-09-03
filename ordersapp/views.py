@@ -95,13 +95,11 @@ class OrderItemsUpdate(CreateView):
         orderitems = context['orderitems']
 
         with transaction.atomic():
-
             self.object = form.save()
             if orderitems.is_valid():
                 orderitems.instance = self.object
                 orderitems.save()
 
-        # удаляем пустой заказ
         if self.object.get_total_cost() == 0:
             self.object.delete()
 
